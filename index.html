@@ -9,20 +9,20 @@
       --bg-base: #111418;
       --bg-surface: #181d23;
       --bg-card: #1e242c;
-      --bg-card-hover: #242b35;
+      --bg-card-hover: #252d37;
       --bg-input: #14181d;
 
       --border-soft: #2b333e;
-      --border-accent: #3b4654;
+      --border-accent: #3d4857;
 
       --text-primary: #eef2f6;
-      --text-secondary: #aeb7c2;
+      --text-secondary: #b4bec9;
       --text-muted: #7c8694;
 
       --red: #d94848;
       --olive: #5f7a52;
       --amber: #d99b26;
-      --sky: #4da3d9;
+      --sky: #55a8de;
 
       --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -43,7 +43,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Subtle top duty stripe */
     .top-stripe {
       height: 3px;
       background: linear-gradient(90deg, var(--red) 0%, var(--amber) 50%, var(--olive) 100%);
@@ -52,7 +51,7 @@
     .topbar {
       background: var(--bg-surface);
       border-bottom: 1px solid var(--border-soft);
-      padding: 14px 20px;
+      padding: 13px 20px;
       position: sticky;
       top: 0;
       z-index: 20;
@@ -74,14 +73,14 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 11px;
     }
 
     .brand-mark {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 6px;
-      background: #252c36;
+      background: #242b35;
       border: 1px solid var(--border-accent);
       border-left: 3px solid var(--red);
       display: grid;
@@ -130,12 +129,11 @@
       padding: 18px 20px 36px;
     }
 
-    /* Filter & Search Bar */
     .filter-bar {
       background: var(--bg-surface);
       border: 1px solid var(--border-soft);
       border-radius: 8px;
-      padding: 10px 12px;
+      padding: 9px 12px;
       margin-bottom: 20px;
       display: flex;
       flex-wrap: wrap;
@@ -168,9 +166,9 @@
     }
 
     .filter-btn.active {
-      background: rgba(217, 72, 72, 0.14);
-      border-color: rgba(217, 72, 72, 0.55);
-      color: #ffd6d6;
+      background: rgba(85, 168, 222, 0.14);
+      border-color: rgba(85, 168, 222, 0.55);
+      color: #d7efff;
     }
 
     .search-box {
@@ -188,7 +186,6 @@
       border-color: var(--sky);
     }
 
-    /* Section Bays */
     .bay {
       margin-bottom: 22px;
     }
@@ -218,44 +215,54 @@
       color: var(--text-muted);
     }
 
-    /* Compact Action Cards */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
       gap: 11px;
     }
 
-    .tool-btn {
+    /* Active / Live Opaque Button */
+    .tool-btn.is-active {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       gap: 10px;
       text-decoration: none;
       background: var(--bg-card);
-      border: 1px solid var(--border-soft);
-      border-left: 3px solid var(--border-accent);
+      border: 1px solid var(--border-accent);
+      border-left: 3px solid var(--olive);
       border-radius: 7px;
       padding: 12px 14px;
       color: var(--text-primary);
+      opacity: 1;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
       transition: background 0.14s ease, border-color 0.14s ease, transform 0.12s ease;
     }
 
-    .tool-btn:hover {
+    .tool-btn.is-active:hover {
       background: var(--bg-card-hover);
-      border-color: var(--border-accent);
+      border-color: #546378;
+      border-left-color: var(--sky);
       transform: translateY(-1px);
     }
 
-    .tool-btn.status-live {
-      border-left-color: var(--olive);
-    }
-
-    .tool-btn.status-rework {
-      border-left-color: var(--amber);
-    }
-
-    .tool-btn.status-build {
-      border-left-color: var(--red);
+    /* Inactive / Non-live Semi-Transparent Greyed Button */
+    .tool-btn.is-disabled {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      background: #161a20;
+      border: 1px solid #242a33;
+      border-left: 3px solid #39414d;
+      border-radius: 7px;
+      padding: 12px 14px;
+      color: var(--text-muted);
+      opacity: 0.42;
+      pointer-events: none;
+      user-select: none;
+      cursor: not-allowed;
     }
 
     .tool-top {
@@ -271,44 +278,21 @@
       color: var(--text-muted);
     }
 
-    .badge {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 4px;
-      letter-spacing: 0.04em;
-    }
-
-    .badge-live {
-      background: rgba(95, 122, 82, 0.22);
-      color: #b7d4a8;
-      border: 1px solid rgba(95, 122, 82, 0.45);
-    }
-
-    .badge-rework {
-      background: rgba(217, 155, 38, 0.18);
-      color: #f3cf83;
-      border: 1px solid rgba(217, 155, 38, 0.42);
-    }
-
-    .badge-build {
-      background: rgba(217, 72, 72, 0.18);
-      color: #f2a7a7;
-      border: 1px solid rgba(217, 72, 72, 0.42);
-    }
-
     .tool-title {
       margin: 4px 0 3px;
       font-size: 15px;
       font-weight: 700;
-      color: var(--text-primary);
+      color: inherit;
     }
 
     .tool-desc {
       margin: 0;
       font-size: 12.5px;
       color: var(--text-secondary);
+    }
+
+    .tool-btn.is-disabled .tool-desc {
+      color: var(--text-muted);
     }
 
     .tool-foot {
@@ -320,6 +304,11 @@
       color: var(--sky);
       padding-top: 6px;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .tool-btn.is-disabled .tool-foot {
+      color: var(--text-muted);
+      font-weight: 500;
     }
 
     .tool-foot span:last-child {
@@ -341,7 +330,7 @@
 
     .foot {
       border-top: 1px solid var(--border-soft);
-      padding: 14px 20px;
+      padding: 13px 20px;
       font-size: 12px;
       color: var(--text-muted);
       background: var(--bg-surface);
@@ -379,7 +368,7 @@
       </div>
 
       <div class="meta-pills">
-        <div class="pill" id="countPill">Tools: <strong>0</strong></div>
+        <div class="pill" id="countPill">Active: <strong>0</strong> / 0</div>
         <div class="pill">Target: <strong>New Tab</strong></div>
       </div>
     </div>
@@ -388,10 +377,9 @@
   <main class="wrap main">
     <div class="filter-bar">
       <div class="filter-group" id="filterButtons">
-        <button type="button" class="filter-btn active" data-status="all" onclick="setFilter('all')">All</button>
-        <button type="button" class="filter-btn" data-status="live" onclick="setFilter('live')">Live</button>
-        <button type="button" class="filter-btn" data-status="rework" onclick="setFilter('rework')">Rework</button>
-        <button type="button" class="filter-btn" data-status="build" onclick="setFilter('build')">To Build</button>
+        <button type="button" class="filter-btn active" data-mode="all" onclick="setMode('all')">All</button>
+        <button type="button" class="filter-btn" data-mode="active" onclick="setMode('active')">Available</button>
+        <button type="button" class="filter-btn" data-mode="offline" onclick="setMode('offline')">Offline</button>
       </div>
 
       <input
@@ -408,14 +396,12 @@
 
   <footer class="foot">
     <div class="wrap foot-inner">
-      <span>Each button links to its own isolated repo/page so updates in one tool never break others.</span>
-      <span>Edit <code>url</code> in <code>MODULES</code> to point to each GitHub Pages repo.</span>
+      <span>Standalone GitHub Pages repos launched in new tabs; updates in one tool do not affect others.</span>
+      <span>Flip <code>active: true</code> and add <code>url</code> in <code>MODULES</code> as new repos go live.</span>
     </div>
   </footer>
 
   <script>
-    // Replace each `url` with your actual GitHub Pages URL, e.g.:
-    // "https://gerber111213.github.io/your-repo-name/"
     const BAYS = [
       {
         id: "fire-scenarios",
@@ -430,7 +416,7 @@
       {
         id: "training-repos",
         title: "Training, Checklists & Repos",
-        hint: "Certification matrix, lesson plans & built repositories"
+        hint: "Certification matrix, lesson plans, speech & built repositories"
       }
     ];
 
@@ -439,141 +425,167 @@
         id: "pump-aid",
         bay: "fire-scenarios",
         cat: "HYDRAULICS",
-        title: "Pump Aid",
-        status: "live",
+        title: "Firetruck Pump Aid",
         desc: "Friction loss, elevation, and pump discharge pressure calculations.",
-        url: "https://gerber111213.github.io/pump-aid/"
+        url: "https://gerber111213.github.io/Firetruck-Pump-Aid/",
+        active: true
       },
       {
         id: "scenario-builder",
         bay: "fire-scenarios",
         cat: "SCENARIOS",
         title: "Scenario Creator",
-        status: "build",
         desc: "Build scenarios for pumping, command, medical, and rescue drills.",
-        url: "https://gerber111213.github.io/scenario-builder/"
+        url: "",
+        active: false
       },
       {
         id: "rescue-tools",
         bay: "rescue-le-med",
         cat: "TECH RESCUE",
-        title: "Rescue Tools",
-        status: "rework",
-        desc: "Mechanical advantage, vectors, and technical rescue field aids.",
-        url: "https://gerber111213.github.io/rescue-tools/"
-      },
-      {
-        id: "police-pathway",
-        bay: "rescue-le-med",
-        cat: "CASE LAW & DECISIONS",
-        title: "Police Pathway",
-        status: "build",
-        desc: "Decision-making frameworks, authorities, and case law scenarios.",
-        url: "https://gerber111213.github.io/police-pathway/"
+        title: "Rope Rescue Math",
+        desc: "Mechanical advantage, vectors, and technical rescue field math.",
+        url: "https://gerber111213.github.io/Rope-Rescue-math/",
+        active: true
       },
       {
         id: "medical-translator",
         bay: "rescue-le-med",
         cat: "CLINICAL",
         title: "Medical Translator",
-        status: "rework",
         desc: "Rapid patient assessment and clinical phrase translation.",
-        url: "https://gerber111213.github.io/medical-translator/"
+        url: "https://gerber111213.github.io/Medical-translator/",
+        active: true
+      },
+      {
+        id: "police-pathway",
+        bay: "rescue-le-med",
+        cat: "CASE LAW & DECISIONS",
+        title: "Police Pathway",
+        desc: "Decision-making frameworks, authorities, and case law scenarios.",
+        url: "",
+        active: false
       },
       {
         id: "course-checklist",
         bay: "training-repos",
         cat: "CAREER MATRIX",
-        title: "Course Checklist & Matrix",
-        status: "live",
+        title: "Firefighter Training Matrix",
         desc: "Certification checklist, prerequisite swimlanes, JSON save, and PDF.",
-        url: "https://gerber111213.github.io/career-matrix/"
+        url: "https://gerber111213.github.io/Firefighter-training-matrix/",
+        active: true
+      },
+      {
+        id: "speech-assistant",
+        bay: "training-repos",
+        cat: "COMMS & BRIEFINGS",
+        title: "Speech Assistant",
+        desc: "Structured briefings, announcements, and speaking support.",
+        url: "https://gerber111213.github.io/speech-assistant/",
+        active: true
       },
       {
         id: "lesson-planner",
         bay: "training-repos",
         cat: "INSTRUCTION",
         title: "Lesson Planner",
-        status: "build",
         desc: "Training outlines, objectives, apparatus/gear lists, and drill flow.",
-        url: "https://gerber111213.github.io/lesson-planner/"
+        url: "",
+        active: false
       },
       {
         id: "built-repos",
         bay: "training-repos",
         cat: "REPOSITORIES",
         title: "My Built Repos",
-        status: "rework",
-        desc: "Quick links to other standalone repos and web builds.",
-        url: "https://gerber111213.github.io/"
+        desc: "Additional standalone repos and web builds.",
+        url: "",
+        active: false
       }
     ];
 
-    let activeStatus = "all";
+    let currentMode = "all";
 
-    function setFilter(status) {
-      activeStatus = status;
+    function setMode(mode) {
+      currentMode = mode;
       document.querySelectorAll("#filterButtons .filter-btn").forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.status === status);
+        btn.classList.toggle("active", btn.dataset.mode === mode);
       });
       render();
-    }
-
-    function badgeMarkup(status) {
-      if (status === "live") return `<span class="badge badge-live">LIVE</span>`;
-      if (status === "rework") return `<span class="badge badge-rework">REWORK</span>`;
-      return `<span class="badge badge-build">TO BUILD</span>`;
-    }
-
-    function actionText(status) {
-      if (status === "live") return "Open Tool";
-      if (status === "rework") return "Open to Rework";
-      return "Open Build Target";
     }
 
     function render() {
       const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
       const baysEl = document.getElementById("bays");
 
+      const activeTotal = MODULES.filter((m) => m.active && m.url).length;
+      document.getElementById("countPill").innerHTML =
+        `Active: <strong>${activeTotal}</strong> / ${MODULES.length}`;
+
       const items = MODULES.filter((m) => {
-        const statusMatch = activeStatus === "all" || m.status === activeStatus;
+        const isReady = Boolean(m.active && m.url);
+        const modeMatch =
+          currentMode === "all" ||
+          (currentMode === "active" && isReady) ||
+          (currentMode === "offline" && !isReady);
+
         const textMatch =
           !q ||
-          `${m.title} ${m.cat} ${m.desc} ${m.status}`.toLowerCase().includes(q);
-        return statusMatch && textMatch;
-      });
+          `${m.title} ${m.cat} ${m.desc}`.toLowerCase().includes(q);
 
-      document.getElementById("countPill").innerHTML =
-        `Showing: <strong>${items.length}</strong> / ${MODULES.length}`;
+        return modeMatch && textMatch;
+      });
 
       const html = BAYS.map((bay) => {
         const bayModules = items.filter((m) => m.bay === bay.id);
         if (!bayModules.length) return "";
 
         const cards = bayModules
-          .map(
-            (m) => `
-            <a
-              class="tool-btn status-${m.status}"
-              href="${m.url}"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div>
-                <div class="tool-top">
-                  <span class="tool-cat">${m.cat}</span>
-                  ${badgeMarkup(m.status)}
+          .map((m) => {
+            const isReady = Boolean(m.active && m.url);
+            if (isReady) {
+              return `
+                <a
+                  class="tool-btn is-active"
+                  href="${m.url}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div>
+                    <div class="tool-top">
+                      <span class="tool-cat">${m.cat}</span>
+                    </div>
+                    <h2 class="tool-title">${m.title}</h2>
+                    <p class="tool-desc">${m.desc}</p>
+                  </div>
+                  <div class="tool-foot">
+                    <span>Open Tool &rarr;</span>
+                    <span>NEW TAB</span>
+                  </div>
+                </a>
+              `;
+            }
+
+            return `
+              <div
+                class="tool-btn is-disabled"
+                aria-disabled="true"
+                tabindex="-1"
+              >
+                <div>
+                  <div class="tool-top">
+                    <span class="tool-cat">${m.cat}</span>
+                  </div>
+                  <h2 class="tool-title">${m.title}</h2>
+                  <p class="tool-desc">${m.desc}</p>
                 </div>
-                <h2 class="tool-title">${m.title}</h2>
-                <p class="tool-desc">${m.desc}</p>
+                <div class="tool-foot">
+                  <span>Unavailable</span>
+                  <span>OFFLINE</span>
+                </div>
               </div>
-              <div class="tool-foot">
-                <span>${actionText(m.status)} &rarr;</span>
-                <span>NEW TAB</span>
-              </div>
-            </a>
-          `
-          )
+            `;
+          })
           .join("");
 
         return `
@@ -589,7 +601,7 @@
 
       baysEl.innerHTML =
         html ||
-        `<div class="empty-state">No modules match your current filter or search.</div>`;
+        `<div class="empty-state">No tools match your current filter or search.</div>`;
     }
 
     render();
