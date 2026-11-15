@@ -208,9 +208,17 @@
     .col-header {
       display: flex;
       align-items: center;
-      gap: 9px;
+      justify-content: space-between;
+      gap: 8px;
       padding-bottom: 9px;
       border-bottom: 1px solid var(--border-soft);
+    }
+
+    .col-header-main {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
     }
 
     .col-graphic {
@@ -242,6 +250,30 @@
       margin: 1px 0 0;
       font-size: 11px;
       color: var(--text-muted);
+    }
+
+    .col-header-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border-accent);
+      color: var(--sky);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 7px;
+      border-radius: 5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+    }
+
+    .col-header-link:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--sky);
+      color: #d7efff;
     }
 
     /* Active / Live Opaque Button */
@@ -342,16 +374,6 @@
       color: var(--text-muted);
       border: 1px dashed var(--border-soft);
       border-radius: 6px;
-    }
-
-    .empty-state {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-soft);
-      border-radius: 8px;
-      padding: 28px;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 13px;
     }
 
     .foot {
@@ -487,6 +509,13 @@
         id: "training",
         title: "Training",
         sub: "Matrices, plans & comms",
+        headerLink: {
+          label: "Scenarios ↗",
+          title: "Scenario Builder",
+          desc: "Build pumping, command, medical, and rescue drill scenarios.",
+          cat: "SCENARIOS",
+          url: "https://gerber111213.github.io/Scenario-builder/"
+        },
         icon: `
           <svg viewBox="0 0 24 24" fill="none" stroke="#b4bec9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
@@ -506,15 +535,6 @@
         desc: "Friction loss, elevation, and pump discharge pressure calculations.",
         url: "https://gerber111213.github.io/Firetruck-Pump-Aid/",
         active: true
-      },
-      {
-        id: "scenario-fire",
-        col: "fire",
-        cat: "SCENARIOS",
-        title: "Scenario Creator",
-        desc: "Build pumping, command, medical, and rescue drill scenarios.",
-        url: "",
-        active: false
       },
 
       // Rescue
@@ -594,9 +614,13 @@
       const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
       const board = document.getElementById("columnsBoard");
 
-      const activeTotal = MODULES.filter((m) => m.active && m.url).length;
+      const headerLinksCount = COLUMNS.filter((c) => c.headerLink && c.headerLink.url).length;
+      const activeModulesCount = MODULES.filter((m) => m.active && m.url).length;
+      const activeTotal = activeModulesCount + headerLinksCount;
+      const totalItems = MODULES.length + headerLinksCount;
+
       document.getElementById("countPill").innerHTML =
-        `Active: <strong>${activeTotal}</strong> / ${MODULES.length}`;
+        `Active: <strong>${activeTotal}</strong> / ${totalItems}`;
 
       const items = MODULES.filter((m) => {
         const isReady = Boolean(m.active && m.url);
@@ -614,6 +638,26 @@
 
       const colsHtml = COLUMNS.map((col) => {
         const colModules = items.filter((m) => m.col === col.id);
+        const showHeaderLink =
+          col.headerLink &&
+          col.headerLink.url &&
+          currentMode !== "offline" &&
+          (!q ||
+            `${col.headerLink.title} ${col.headerLink.label} ${col.headerLink.cat} ${col.headerLink.desc}`
+              .toLowerCase()
+              .includes(q));
+
+        const headerLinkHtml = showHeaderLink
+          ? `
+            <a
+              class="col-header-link"
+              href="${col.headerLink.url}"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="${col.headerLink.title} (Opens in new tab)"
+            >${col.headerLink.label}</a>
+          `
+          : "";
 
         const cardsHtml = colModules.length
           ? colModules
@@ -664,11 +708,14 @@
         return `
           <section class="col-panel" aria-label="${col.title}">
             <div class="col-header">
-              <div class="col-graphic">${col.icon}</div>
-              <div>
-                <h2 class="col-title">${col.title}</h2>
-                <p class="col-sub">${col.sub}</p>
+              <div class="col-header-main">
+                <div class="col-graphic">${col.icon}</div>
+                <div>
+                  <h2 class="col-title">${col.title}</h2>
+                  <p class="col-sub">${col.sub}</p>
+                </div>
               </div>
+              ${headerLinkHtml}
             </div>
             ${cardsHtml}
           </section>
