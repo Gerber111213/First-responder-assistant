@@ -58,7 +58,7 @@
     }
 
     .wrap {
-      max-width: 1240px;
+      max-width: 1480px;
       margin: 0 auto;
     }
 
@@ -134,7 +134,7 @@
       border: 1px solid var(--border-soft);
       border-radius: 8px;
       padding: 9px 12px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -186,39 +186,62 @@
       border-color: var(--sky);
     }
 
-    .bay {
-      margin-bottom: 22px;
+    /* 5-Column Discipline Layout */
+    .columns-board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      align-items: start;
     }
 
-    .bay-head {
+    .col-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      padding: 12px;
       display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 10px;
-      padding-bottom: 6px;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .col-header {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding-bottom: 9px;
       border-bottom: 1px solid var(--border-soft);
     }
 
-    .bay-name {
+    .col-graphic {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-accent);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .col-graphic svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .col-title {
       margin: 0;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
+      letter-spacing: 0.02em;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
       color: var(--text-primary);
     }
 
-    .bay-hint {
-      font-size: 11.5px;
+    .col-sub {
+      margin: 1px 0 0;
+      font-size: 11px;
       color: var(--text-muted);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
-      gap: 11px;
     }
 
     /* Active / Live Opaque Button */
@@ -226,13 +249,13 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       text-decoration: none;
       background: var(--bg-card);
       border: 1px solid var(--border-accent);
       border-left: 3px solid var(--olive);
       border-radius: 7px;
-      padding: 12px 14px;
+      padding: 11px 12px;
       color: var(--text-primary);
       opacity: 1;
       cursor: pointer;
@@ -252,12 +275,12 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       background: #161a20;
       border: 1px solid #242a33;
       border-left: 3px solid #39414d;
       border-radius: 7px;
-      padding: 12px 14px;
+      padding: 11px 12px;
       color: var(--text-muted);
       opacity: 0.42;
       pointer-events: none;
@@ -265,29 +288,23 @@
       cursor: not-allowed;
     }
 
-    .tool-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
     .tool-cat {
       font-family: var(--font-mono);
-      font-size: 10.5px;
+      font-size: 10px;
       color: var(--text-muted);
+      display: block;
     }
 
     .tool-title {
-      margin: 4px 0 3px;
-      font-size: 15px;
+      margin: 3px 0 3px;
+      font-size: 14px;
       font-weight: 700;
       color: inherit;
     }
 
     .tool-desc {
       margin: 0;
-      font-size: 12.5px;
+      font-size: 12px;
       color: var(--text-secondary);
     }
 
@@ -299,7 +316,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 600;
       color: var(--sky);
       padding-top: 6px;
@@ -313,9 +330,18 @@
 
     .tool-foot span:last-child {
       font-family: var(--font-mono);
-      font-size: 10.5px;
+      font-size: 10px;
       color: var(--text-muted);
       font-weight: 500;
+    }
+
+    .empty-col {
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      border: 1px dashed var(--border-soft);
+      border-radius: 6px;
     }
 
     .empty-state {
@@ -351,6 +377,18 @@
       background: var(--bg-input);
       padding: 1px 5px;
       border-radius: 4px;
+    }
+
+    @media (max-width: 1220px) {
+      .columns-board {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 780px) {
+      .columns-board {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -391,7 +429,7 @@
       />
     </div>
 
-    <div id="bays"></div>
+    <div class="columns-board" id="columnsBoard"></div>
   </main>
 
   <footer class="foot">
@@ -402,82 +440,129 @@
   </footer>
 
   <script>
-    const BAYS = [
+    const COLUMNS = [
       {
-        id: "fire-scenarios",
-        title: "Fireground & Scenarios",
-        hint: "Hydraulics & multi-discipline scenario drills"
+        id: "fire",
+        title: "Fire",
+        sub: "Hydraulics & fireground",
+        icon: `
+          <svg viewBox="0 0 24 24" fill="none" stroke="#d94848" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3c2.5 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-4.5 2.5-6 .2 1.8 1.2 2.5 2.5 2.5 0-2.5 0-4.5 0-6.5z"/>
+          </svg>
+        `
       },
       {
-        id: "rescue-le-med",
-        title: "Rescue, Police & Medical",
-        hint: "Technical rescue, decision/case law & clinical aid"
+        id: "rescue",
+        title: "Rescue",
+        sub: "Technical & decision aids",
+        icon: `
+          <svg viewBox="0 0 24 24" fill="none" stroke="#d99b26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8"/>
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 4v5M12 15v5M4 12h5M15 12h5"/>
+          </svg>
+        `
       },
       {
-        id: "training-repos",
-        title: "Training, Checklists & Repos",
-        hint: "Certification matrix, lesson plans, speech & built repositories"
+        id: "medical",
+        title: "Medical",
+        sub: "Patient & clinical comms",
+        icon: `
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5f7a52" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        `
+      },
+      {
+        id: "police",
+        title: "Police",
+        sub: "Decisions & case law",
+        icon: `
+          <svg viewBox="0 0 24 24" fill="none" stroke="#55a8de" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3l7 3v6c0 5-3.2 8.2-7 9-3.8-.8-7-4-7-9V6l7-3z"/>
+          </svg>
+        `
+      },
+      {
+        id: "training",
+        title: "Training",
+        sub: "Matrices, plans & comms",
+        icon: `
+          <svg viewBox="0 0 24 24" fill="none" stroke="#b4bec9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        `
       }
     ];
 
     const MODULES = [
+      // Fire
       {
         id: "pump-aid",
-        bay: "fire-scenarios",
+        col: "fire",
         cat: "HYDRAULICS",
-        title: "Firetruck Pump Aid",
+        title: "Pump Aid",
         desc: "Friction loss, elevation, and pump discharge pressure calculations.",
         url: "https://gerber111213.github.io/Firetruck-Pump-Aid/",
         active: true
       },
       {
-        id: "scenario-builder",
-        bay: "fire-scenarios",
+        id: "scenario-fire",
+        col: "fire",
         cat: "SCENARIOS",
         title: "Scenario Creator",
-        desc: "Build scenarios for pumping, command, medical, and rescue drills.",
+        desc: "Build pumping, command, medical, and rescue drill scenarios.",
         url: "",
         active: false
       },
+
+      // Rescue
       {
-        id: "rescue-tools",
-        bay: "rescue-le-med",
-        cat: "TECH RESCUE",
-        title: "Rope Rescue Math",
-        desc: "Mechanical advantage, vectors, and technical rescue field math.",
+        id: "rescue-decision-maker",
+        col: "rescue",
+        cat: "ROPE & RESCUE MATH",
+        title: "Rescue decision maker",
+        desc: "Mechanical advantage, vectors, and technical rescue decision support.",
         url: "https://gerber111213.github.io/Rope-Rescue-math/",
         active: true
       },
+
+      // Medical
       {
         id: "medical-translator",
-        bay: "rescue-le-med",
+        col: "medical",
         cat: "CLINICAL",
         title: "Medical Translator",
         desc: "Rapid patient assessment and clinical phrase translation.",
         url: "https://gerber111213.github.io/Medical-translator/",
         active: true
       },
+
+      // Police
       {
-        id: "police-pathway",
-        bay: "rescue-le-med",
+        id: "police-decision-pathway",
+        col: "police",
         cat: "CASE LAW & DECISIONS",
-        title: "Police Pathway",
+        title: "Police decision pathway",
         desc: "Decision-making frameworks, authorities, and case law scenarios.",
         url: "",
         active: false
       },
+
+      // Training
       {
         id: "course-checklist",
-        bay: "training-repos",
+        col: "training",
         cat: "CAREER MATRIX",
-        title: "Firefighter Training Matrix",
+        title: "Course Checklist & Matrix",
         desc: "Certification checklist, prerequisite swimlanes, JSON save, and PDF.",
         url: "https://gerber111213.github.io/Firefighter-training-matrix/",
         active: true
       },
       {
         id: "speech-assistant",
-        bay: "training-repos",
+        col: "training",
         cat: "COMMS & BRIEFINGS",
         title: "Speech Assistant",
         desc: "Structured briefings, announcements, and speaking support.",
@@ -486,19 +571,10 @@
       },
       {
         id: "lesson-planner",
-        bay: "training-repos",
+        col: "training",
         cat: "INSTRUCTION",
         title: "Lesson Planner",
         desc: "Training outlines, objectives, apparatus/gear lists, and drill flow.",
-        url: "",
-        active: false
-      },
-      {
-        id: "built-repos",
-        bay: "training-repos",
-        cat: "REPOSITORIES",
-        title: "My Built Repos",
-        desc: "Additional standalone repos and web builds.",
         url: "",
         active: false
       }
@@ -516,7 +592,7 @@
 
     function render() {
       const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
-      const baysEl = document.getElementById("bays");
+      const board = document.getElementById("columnsBoard");
 
       const activeTotal = MODULES.filter((m) => m.active && m.url).length;
       document.getElementById("countPill").innerHTML =
@@ -536,72 +612,70 @@
         return modeMatch && textMatch;
       });
 
-      const html = BAYS.map((bay) => {
-        const bayModules = items.filter((m) => m.bay === bay.id);
-        if (!bayModules.length) return "";
+      const colsHtml = COLUMNS.map((col) => {
+        const colModules = items.filter((m) => m.col === col.id);
 
-        const cards = bayModules
-          .map((m) => {
-            const isReady = Boolean(m.active && m.url);
-            if (isReady) {
-              return `
-                <a
-                  class="tool-btn is-active"
-                  href="${m.url}"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <div>
-                    <div class="tool-top">
+        const cardsHtml = colModules.length
+          ? colModules
+              .map((m) => {
+                const isReady = Boolean(m.active && m.url);
+                if (isReady) {
+                  return `
+                    <a
+                      class="tool-btn is-active"
+                      href="${m.url}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <div>
+                        <span class="tool-cat">${m.cat}</span>
+                        <h2 class="tool-title">${m.title}</h2>
+                        <p class="tool-desc">${m.desc}</p>
+                      </div>
+                      <div class="tool-foot">
+                        <span>Open Tool &rarr;</span>
+                        <span>NEW TAB</span>
+                      </div>
+                    </a>
+                  `;
+                }
+
+                return `
+                  <div
+                    class="tool-btn is-disabled"
+                    aria-disabled="true"
+                    tabindex="-1"
+                  >
+                    <div>
                       <span class="tool-cat">${m.cat}</span>
+                      <h2 class="tool-title">${m.title}</h2>
+                      <p class="tool-desc">${m.desc}</p>
                     </div>
-                    <h2 class="tool-title">${m.title}</h2>
-                    <p class="tool-desc">${m.desc}</p>
+                    <div class="tool-foot">
+                      <span>Unavailable</span>
+                      <span>OFFLINE</span>
+                    </div>
                   </div>
-                  <div class="tool-foot">
-                    <span>Open Tool &rarr;</span>
-                    <span>NEW TAB</span>
-                  </div>
-                </a>
-              `;
-            }
-
-            return `
-              <div
-                class="tool-btn is-disabled"
-                aria-disabled="true"
-                tabindex="-1"
-              >
-                <div>
-                  <div class="tool-top">
-                    <span class="tool-cat">${m.cat}</span>
-                  </div>
-                  <h2 class="tool-title">${m.title}</h2>
-                  <p class="tool-desc">${m.desc}</p>
-                </div>
-                <div class="tool-foot">
-                  <span>Unavailable</span>
-                  <span>OFFLINE</span>
-                </div>
-              </div>
-            `;
-          })
-          .join("");
+                `;
+              })
+              .join("")
+          : `<div class="empty-col">No matching tools</div>`;
 
         return `
-          <section class="bay">
-            <div class="bay-head">
-              <h2 class="bay-name">${bay.title}</h2>
-              <span class="bay-hint">${bay.hint}</span>
+          <section class="col-panel" aria-label="${col.title}">
+            <div class="col-header">
+              <div class="col-graphic">${col.icon}</div>
+              <div>
+                <h2 class="col-title">${col.title}</h2>
+                <p class="col-sub">${col.sub}</p>
+              </div>
             </div>
-            <div class="grid">${cards}</div>
+            ${cardsHtml}
           </section>
         `;
       }).join("");
 
-      baysEl.innerHTML =
-        html ||
-        `<div class="empty-state">No tools match your current filter or search.</div>`;
+      board.innerHTML = colsHtml;
     }
 
     render();
