@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COMMAND DECK // Tactical Ops, Fire, Rescue &amp; Training Hub</title>
+  <style>
+    :root {
+      --bg-void: #070a0f;
+      --bg-panel: #0e141e;
+      --bg-card: #131b28;
+      --bg-card-hover: #192436;
+      --border-grid: rgba(148, 163, 184, 0.14);
+      --border-tactical: #263347;
+      --text-main: #f1f5f9;
+      --text-dim: #94a3b8;
+      --text-micro: #64748b;
+
+      --fire: #ef4444;
+      --fire-glow: rgba(239, 68, 68, 0.28);
+      --amber: #f59e0b;
+      --amber-glow: rgba(245, 158, 11, 0.22);
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.22);
+      --cyan: #38bdf8;
+      --cyan-glow: rgba(56, 189, 248, 0.2);
+
+      --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-void);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.45;
+      min-height: 100vh;
+      background-image:
+        linear-gradient(to right, var(--border-grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--border-grid) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+
+    /* Top Hazard Strip */
+    .hazard-bar {
+      height: 5px;
+      background: repeating-linear-gradient(
+        -45deg,
+        #ef4444,
+        #ef4444 12px,
+        #0b0f17 12px,
+        #0b0f17 24px
+      );
+    }
+
+    .hud-header {
+      background: rgba(10, 15, 23, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-tactical);
+      padding: 18px 24px;
+    }
+
+    .container {
+      max-width: 1360px;
+      margin: 0 auto;
+    }
+
+    .hud-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .callsign-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .crest {
+      width: 48px;
+      height: 48px;
+      border: 2px solid var(--fire);
+      background: linear-gradient(160deg, rgba(239, 68, 68, 0.22), rgba(15, 23, 42, 0.95));
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      color: #fca5a5;
+      box-shadow: 0 0 18px var(--fire-glow);
+      flex-shrink: 0;
+    }
+
+    .hud-kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+    }
+
+    .hud-title {
+      margin: 2px 0 0;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .hud-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+    }
+
+    .status-chip {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-tactical);
+      padding: 6px 10px;
+      border-radius: 4px;
+      color: var(--text-dim);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .status-chip strong {
+      color: var(--text-main);
+    }
+
+    .dot-live {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 8px var(--emerald);
+    }
+
+    /* Filter Bar */
+    .filter-deck {
+      margin: 22px 0 26px;
+      padding: 14px 16px;
+      background: rgba(14, 20, 30, 0.9);
+      border: 1px solid var(--border-tactical);
+      border-left: 4px solid var(--fire);
+      border-radius: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .filter-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter-btn {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: var(--bg-card);
+      border: 1px solid var(--border-tactical);
+      color: var(--text-dim);
+      padding: 7px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+
+    .filter-btn:hover {
+      color: var(--text-main);
+      border-color: var(--amber);
+    }
+
+    .filter-btn.active {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: var(--fire);
+      color: #fff;
+    }
+
+    .search-input {
+      background: var(--bg-void);
+      border: 1px solid var(--border-tactical);
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      min-width: 240px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--cyan);
+    }
+
+    /* Bays / Sections */
+    .bay-section {
+      margin-bottom: 30px;
+    }
+
+    .bay-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-tactical);
+    }
+
+    .bay-title {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .bay-code {
+      color: var(--fire);
+    }
+
+    .bay-sub {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-micro);
+    }
+
+    /* Tactile Action Button Cards */
+    .ops-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 14px;
+    }
+
+    .ops-btn-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      text-decoration: none;
+      background: linear-gradient(180deg, var(--bg-card) 0%, #0f1622 100%);
+      border: 1px solid var(--border-tactical);
+      border-top: 3px solid var(--border-tactical);
+      border-radius: 6px;
+      padding: 16px;
+      color: var(--text-main);
+      transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease, background 0.14s ease;
+      overflow: hidden;
+    }
+
+    .ops-btn-card:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(180deg, var(--bg-card-hover) 0%, #131d2e 100%);
+      border-color: #475569;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
+    }
+
+    .ops-btn-card.state-live {
+      border-top-color: var(--emerald);
+    }
+    .ops-btn-card.state-live:hover {
+      border-color: var(--emerald);
+      box-shadow: 0 8px 22px var(--emerald-glow);
+    }
+
+    .ops-btn-card.state-rework {
+      border-top-color: var(--amber);
+    }
+    .ops-btn-card.state-rework:hover {
+      border-color: var(--amber);
+      box-shadow: 0 8px 22px var(--amber-glow);
+    }
+
+    .ops-btn-card.state-build {
+      border-top-color: var(--fire);
+    }
+    .ops-btn-card.state-build:hover {
+      border-color: var(--fire);
+      box-shadow: 0 8px 22px var(--fire-glow);
+    }
+
+    .card-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .module-code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-micro);
+      letter-spacing: 0.08em;
+    }
+
+    .state-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 7px;
+      border-radius: 3px;
+    }
+
+    .badge-live {
+      background: rgba(16, 185, 129, 0.16);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.45);
+    }
+
+    .badge-rework {
+      background: rgba(245, 158, 11, 0.16);
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.45);
+    }
+
+    .badge-build {
+      background: rgba(239, 68, 68, 0.18);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.45);
+    }
+
+    .card-title {
+      margin: 8px 0 6px;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      color: #f8fafc;
+    }
+
+    .card-desc {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.18);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+
+    .new-tab-tag {
+      font-size: 10px;
+      color: var(--text-micro);
+      font-weight: 600;
+    }
+
+    footer {
+      border-top: 1px solid var(--border-tactical);
+      background: rgba(10, 15, 23, 0.9);
+      padding: 16px 24px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-micro);
+    }
+
+    .footer-inner {
+      max-width: 1360px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="hazard-bar"></div>
+
+  <header class="hud-header">
+    <div class="container hud-top">
+      <div class="callsign-wrap">
+        <div class="crest">CMD-01</div>
+        <div>
+          <div class="hud-kicker">Tactical Field &amp; Training Console</div>
+          <h1 class="hud-title">Emergency Ops &amp; Toolkit Hub</h1>
+        </div>
+      </div>
+
+      <div class="hud-meta-strip">
+        <div class="status-chip"><span class="dot-live"></span><span>ISOLATED MODULES: <strong>ACTIVE</strong></span></div>
+        <div class="status-chip">LAUNCH MODE: <strong>NEW TAB</strong></div>
+        <div class="status-chip" id="readinessCounter">MODULES: <strong>0</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 0 24px 20px;">
+    <section class="filter-deck" aria-label="Module Filters">
+      <div class="filter-buttons" id="statusFilterGroup">
+        <button type="button" class="filter-btn active" data-filter="all" onclick="setStatusFilter('all')">All Modules</button>
+        <button type="button" class="filter-btn" data-filter="live" onclick="setStatusFilter('live')">Built / Live</button>
+        <button type="button" class="filter-btn" data-filter="rework" onclick="setStatusFilter('rework')">Needs Rework</button>
+        <button type="button" class="filter-btn" data-filter="build" onclick="setStatusFilter('build')">To Build</button>
+      </div>
+
+      <input
+        type="search"
+        class="search-input"
+        id="moduleSearch"
+        placeholder="Search pump, rescue, medical, police, scenario, checklist..."
+        oninput="renderHub()"
+      />
+    </section>
+
+    <div id="baysContainer"></div>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>ARCHITECTURE: STANDALONE PAGES / REPOS LAUNCHED IN NEW TABS (ZERO SHARED CRASH RISK)</span>
+      <span>UPDATE <code>MODULES</code> ARRAY IN <code>index.html</code> TO WIRE PATHS &amp; REPO URLS</span>
+    </div>
+  </footer>
+
+  <script>
+    // Edit URLs to point to your folders (e.g., "./pump-aid/index.html") or GitHub Pages URLs.
+    // status values: "live" | "rework" | "build"
+    const BAYS = [
+      {
+        code: "BAY 01",
+        title: "Fireground, Apparatus & Scenario Ops",
+        subtitle: "Hydraulics & Multi-Discipline Drill Generator"
+      },
+      {
+        code: "BAY 02",
+        title: "Rescue, Law Enforcement & Clinical",
+        subtitle: "Technical Rescue, Decision/Case Law & Medical Comms"
+      },
+      {
+        code: "BAY 03",
+        title: "Training, Career Matrix & Repo Vault",
+        subtitle: "Certification Roadmap, Lesson Plans & Built Repositories"
+      }
+    ];
+
+    const MODULES = [
+      {
+        id: "pump-aid",
+        bay: "BAY 01",
+        code: "MOD-01 // HYDRAULICS",
+        title: "Pump Aid",
+        status: "live",
+        description: "Apparatus pump calculations, friction loss, elevation gain, and discharge pressure quick reference.",
+        url: "./pump-aid/index.html"
+      },
+      {
+        id: "scenario-builder",
+        bay: "BAY 01",
+        code: "MOD-02 // DRILLS",
+        title: "Scenario Creator",
+        status: "build",
+        description: "Generate & run tactical training scenarios across Pumping, Command, Medical, and Technical Rescue.",
+        url: "./scenario-builder/index.html"
+      },
+      {
+        id: "rescue-tools",
+        bay: "BAY 02",
+        code: "MOD-03 // TECH RESCUE",
+        title: "Rescue Tools",
+        status: "rework",
+        description: "Rope systems, mechanical advantage, load vectors, and technical rescue field math & calculators.",
+        url: "./rescue-tools/index.html"
+      },
+      {
+        id: "police-pathway",
+        bay: "BAY 02",
+        code: "MOD-04 // LE & CASE LAW",
+        title: "Police Pathway: Decision & Case Law",
+        status: "build",
+        description: "Structured tactical/operational decision-making models and case law reference scenarios.",
+        url: "./police-pathway/index.html"
+      },
+      {
+        id: "medical-translator",
+        bay: "BAY 02",
+        code: "MOD-05 // CLINICAL COMMS",
+        title: "Medical Translator",
+        status: "rework",
+        description: "Rapid patient assessment, pain/symptom translation, and clinical communication aid.",
+        url: "./medical-translator/index.html"
+      },
+      {
+        id: "course-checklist",
+        bay: "BAY 03",
+        code: "MOD-06 // CAREER MATRIX",
+        title: "Course Checklist & Career Matrix",
+        status: "live",
+        description: "100+ certifications across 6 swimlanes, prerequisite tracking, JSON profile export/import, and PDF export.",
+        url: "./career-matrix/index.html"
+      },
+      {
+        id: "lesson-planner",
+        bay: "BAY 03",
+        code: "MOD-07 // INSTRUCTION",
+        title: "Lesson Planner",
+        status: "build",
+        description: "Build structured fire/rescue/medical lesson plans, training objectives, gear lists, and drill timelines.",
+        url: "./lesson-planner/index.html"
+      },
+      {
+        id: "built-repos",
+        bay: "BAY 03",
+        code: "MOD-08 // REPO VAULT",
+        title: "Built Repos & Web Projects",
+        status: "rework",
+        description: "Directory and quick-launch buttons for all other standalone repos, calculators, and builds.",
+        url: "./repos-vault/index.html"
+      }
+    ];
+
+    let currentFilter = "all";
+
+    function setStatusFilter(filterKey) {
+      currentFilter = filterKey;
+      document.querySelectorAll("#statusFilterGroup .filter-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.getAttribute("data-filter") === filterKey);
+      });
+      renderHub();
+    }
+
+    function getStatusBadge(status) {
+      if (status === "live") return `<span class="state-badge badge-live">LIVE / BUILT</span>`;
+      if (status === "rework") return `<span class="state-badge badge-rework">REWORK</span>`;
+      return `<span class="state-badge badge-build">TO BUILD</span>`;
+    }
+
+    function getActionLabel(status) {
+      if (status === "live") return "LAUNCH MODULE";
+      if (status === "rework") return "OPEN FOR REWORK";
+      return "OPEN STUB / BUILD";
+    }
+
+    function renderHub() {
+      const query = (document.getElementById("moduleSearch").value || "").trim().toLowerCase();
+      const container = document.getElementById("baysContainer");
+
+      const filtered = MODULES.filter((m) => {
+        const statusOk = currentFilter === "all" || m.status === currentFilter;
+        const textOk =
+          !query ||
+          `${m.title} ${m.code} ${m.description} ${m.status} ${m.bay}`.toLowerCase().includes(query);
+        return statusOk && textOk;
+      });
+
+      const liveCount = MODULES.filter((m) => m.status === "live").length;
+      document.getElementById("readinessCounter").innerHTML =
+        `SHOWING: <strong>${filtered.length}/${MODULES.length}</strong> &bull; LIVE: <strong>${liveCount}</strong>`;
+
+      const html = BAYS.map((bay) => {
+        const bayItems = filtered.filter((m) => m.bay === bay.code);
+        if (bayItems.length === 0) return "";
+
+        const cardsHtml = bayItems
+          .map(
+            (m) => `
+            <a
+              class="ops-btn-card state-${m.status}"
+              href="${m.url}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div>
+                <div class="card-top-row">
+                  <span class="module-code">${m.code}</span>
+                  ${getStatusBadge(m.status)}
+                </div>
+                <h3 class="card-title">${m.title}</h3>
+                <p class="card-desc">${m.description}</p>
+              </div>
+              <div class="card-footer">
+                <span>${getActionLabel(m.status)} &rarr;</span>
+                <span class="new-tab-tag">[NEW TAB]</span>
+              </div>
+            </a>
+          `
+          )
+          .join("");
+
+        return `
+          <section class="bay-section" aria-label="${bay.title}">
+            <div class="bay-header">
+              <h2 class="bay-title"><span class="bay-code">${bay.code} //</span> ${bay.title}</h2>
+              <span class="bay-sub">${bay.subtitle}</span>
+            </div>
+            <div class="ops-grid">${cardsHtml}</div>
+          </section>
+        `;
+      }).join("");
+
+      container.innerHTML =
+        html ||
+        `<div style="padding: 36px; text-align: center; font-family: var(--font-mono); color: var(--text-dim); background: var(--bg-panel); border: 1px solid var(--border-tactical); border-radius: 6px;">
+          NO MODULES MATCH CURRENT FILTER / SEARCH.
+        </div>`;
+    }
+
+    renderHub();
+  </script>
+</body>
+</html>
