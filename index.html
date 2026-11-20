@@ -6,23 +6,24 @@
   <title>First Responder Assistant // Tactical &amp; Ops Hub</title>
   <style>
     :root {
-      --bg-base: #111418;
-      --bg-surface: #181d23;
-      --bg-card: #1e242c;
-      --bg-card-hover: #252d37;
-      --bg-input: #14181d;
+      --bg-base: #0d1015;
+      --bg-surface: #141920;
+      --bg-card: #1b212b;
+      --bg-card-hover: #222a37;
+      --bg-input: #10141a;
 
-      --border-soft: #2b333e;
-      --border-accent: #3d4857;
+      --border-soft: #262f3b;
+      --border-accent: #384454;
 
-      --text-primary: #eef2f6;
-      --text-secondary: #b4bec9;
-      --text-muted: #7c8694;
+      --text-primary: #f1f5f9;
+      --text-secondary: #b8c2ce;
+      --text-muted: #7c8796;
 
-      --red: #d94848;
-      --olive: #5f7a52;
-      --amber: #d99b26;
-      --sky: #55a8de;
+      --red: #e05252;
+      --olive: #688759;
+      --amber: #e2a42b;
+      --sky: #5cb0e6;
+      --slate: #9aa7b8;
 
       --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -35,21 +36,25 @@
     html, body {
       margin: 0;
       padding: 0;
-      background: var(--bg-base);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(92, 176, 230, 0.06), transparent 48%),
+        var(--bg-base);
       color: var(--text-primary);
       font-family: var(--font-sans);
       font-size: 14px;
       line-height: 1.45;
       -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
     }
 
     .top-stripe {
       height: 3px;
-      background: linear-gradient(90deg, var(--red) 0%, var(--amber) 50%, var(--olive) 100%);
+      background: linear-gradient(90deg, var(--red) 0%, var(--amber) 35%, var(--olive) 70%, var(--sky) 100%);
     }
 
     .topbar {
-      background: var(--bg-surface);
+      background: rgba(20, 25, 32, 0.92);
+      backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border-soft);
       padding: 13px 20px;
       position: sticky;
@@ -77,10 +82,10 @@
     }
 
     .brand-mark {
-      width: 34px;
-      height: 34px;
-      border-radius: 6px;
-      background: #242b35;
+      width: 36px;
+      height: 36px;
+      border-radius: 7px;
+      background: #1f2631;
       border: 1px solid var(--border-accent);
       border-left: 3px solid var(--red);
       display: grid;
@@ -88,6 +93,7 @@
       font-family: var(--font-mono);
       font-size: 11px;
       font-weight: 700;
+      letter-spacing: 0.05em;
       color: var(--text-primary);
       flex-shrink: 0;
     }
@@ -117,7 +123,9 @@
       background: var(--bg-input);
       border: 1px solid var(--border-soft);
       padding: 5px 10px;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
     }
 
     .pill strong {
@@ -152,8 +160,8 @@
       background: var(--bg-input);
       border: 1px solid var(--border-soft);
       color: var(--text-secondary);
-      padding: 6px 11px;
-      border-radius: 5px;
+      padding: 6px 12px;
+      border-radius: 6px;
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
@@ -166,9 +174,9 @@
     }
 
     .filter-btn.active {
-      background: rgba(85, 168, 222, 0.14);
-      border-color: rgba(85, 168, 222, 0.55);
-      color: #d7efff;
+      background: rgba(92, 176, 230, 0.15);
+      border-color: rgba(92, 176, 230, 0.55);
+      color: #dff3ff;
     }
 
     .search-box {
@@ -176,10 +184,12 @@
       border: 1px solid var(--border-soft);
       color: var(--text-primary);
       padding: 6px 11px;
-      border-radius: 5px;
+      border-radius: 6px;
       font-size: 12.5px;
-      min-width: 230px;
+      width: 240px;
+      max-width: 100%;
       outline: none;
+      transition: border-color 0.14s ease;
     }
 
     .search-box:focus {
@@ -190,13 +200,15 @@
     .columns-board {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 12px;
+      gap: 13px;
       align-items: start;
     }
 
     .col-panel {
+      --col-accent: var(--slate);
       background: var(--bg-surface);
       border: 1px solid var(--border-soft);
+      border-top: 2px solid var(--col-accent);
       border-radius: 8px;
       padding: 12px;
       display: flex;
@@ -204,6 +216,12 @@
       gap: 10px;
       min-width: 0;
     }
+
+    .col-panel[data-col="fire"] { --col-accent: var(--red); }
+    .col-panel[data-col="rescue"] { --col-accent: var(--amber); }
+    .col-panel[data-col="medical"] { --col-accent: var(--olive); }
+    .col-panel[data-col="police"] { --col-accent: var(--sky); }
+    .col-panel[data-col="training"] { --col-accent: var(--slate); }
 
     .col-header {
       display: flex;
@@ -239,9 +257,9 @@
 
     .col-title {
       margin: 0;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
       color: var(--text-primary);
     }
@@ -273,7 +291,7 @@
     .col-header-link:hover {
       background: var(--bg-card-hover);
       border-color: var(--sky);
-      color: #d7efff;
+      color: #dff3ff;
     }
 
     /* Active / Live Opaque Button */
@@ -281,24 +299,23 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 8px;
+      gap: 9px;
       text-decoration: none;
       background: var(--bg-card);
       border: 1px solid var(--border-accent);
-      border-left: 3px solid var(--olive);
+      border-left: 3px solid var(--col-accent);
       border-radius: 7px;
       padding: 11px 12px;
       color: var(--text-primary);
       opacity: 1;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
       transition: background 0.14s ease, border-color 0.14s ease, transform 0.12s ease;
     }
 
     .tool-btn.is-active:hover {
       background: var(--bg-card-hover);
-      border-color: #546378;
-      border-left-color: var(--sky);
+      border-color: #55667c;
       transform: translateY(-1px);
     }
 
@@ -308,13 +325,13 @@
       flex-direction: column;
       justify-content: space-between;
       gap: 8px;
-      background: #161a20;
-      border: 1px solid #242a33;
-      border-left: 3px solid #39414d;
+      background: #12161c;
+      border: 1px solid #222933;
+      border-left: 3px solid #363f4c;
       border-radius: 7px;
       padding: 11px 12px;
       color: var(--text-muted);
-      opacity: 0.42;
+      opacity: 0.45;
       pointer-events: none;
       user-select: none;
       cursor: not-allowed;
@@ -323,6 +340,7 @@
     .tool-cat {
       font-family: var(--font-mono);
       font-size: 10px;
+      letter-spacing: 0.04em;
       color: var(--text-muted);
       display: block;
     }
@@ -350,7 +368,7 @@
       justify-content: space-between;
       font-size: 11px;
       font-weight: 600;
-      color: var(--sky);
+      color: var(--col-accent);
       padding-top: 6px;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
@@ -367,13 +385,15 @@
       font-weight: 500;
     }
 
-    .empty-col {
-      padding: 14px 10px;
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 28px 16px;
       text-align: center;
-      font-size: 11.5px;
+      font-size: 13px;
       color: var(--text-muted);
+      background: var(--bg-surface);
       border: 1px dashed var(--border-soft);
-      border-radius: 6px;
+      border-radius: 8px;
     }
 
     .foot {
@@ -411,6 +431,10 @@
       .columns-board {
         grid-template-columns: 1fr;
       }
+
+      .search-box {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -423,7 +447,7 @@
         <div class="brand-mark">OPS</div>
         <div>
           <h1 class="brand-title">First Responder Assistant</h1>
-          <p class="brand-sub">Field &amp; Training Hub &bull; Standalone Tools &amp; Repositories</p>
+          <p class="brand-sub">Field &amp; Training Hub &bull; Stateless Standalone Tools</p>
         </div>
       </div>
 
@@ -446,7 +470,7 @@
         type="search"
         class="search-box"
         id="searchInput"
-        placeholder="Filter tools..."
+        placeholder="Filter tools (/ to focus)..."
         oninput="render()"
       />
     </div>
@@ -468,7 +492,7 @@
         title: "Fire",
         sub: "Hydraulics & fireground",
         icon: `
-          <svg viewBox="0 0 24 24" fill="none" stroke="#d94848" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#e05252" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 3c2.5 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-4.5 2.5-6 .2 1.8 1.2 2.5 2.5 2.5 0-2.5 0-4.5 0-6.5z"/>
           </svg>
         `
@@ -476,9 +500,9 @@
       {
         id: "rescue",
         title: "Rescue",
-        sub: "Technical & decision aids",
+        sub: "Technical, RPAS & decision aids",
         icon: `
-          <svg viewBox="0 0 24 24" fill="none" stroke="#d99b26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#e2a42b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="8"/>
             <circle cx="12" cy="12" r="3"/>
             <path d="M12 4v5M12 15v5M4 12h5M15 12h5"/>
@@ -490,7 +514,7 @@
         title: "Medical",
         sub: "Patient & clinical comms",
         icon: `
-          <svg viewBox="0 0 24 24" fill="none" stroke="#5f7a52" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#688759" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 5v14M5 12h14"/>
           </svg>
         `
@@ -500,7 +524,7 @@
         title: "Police",
         sub: "Decisions & case law",
         icon: `
-          <svg viewBox="0 0 24 24" fill="none" stroke="#55a8de" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5cb0e6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 3l7 3v6c0 5-3.2 8.2-7 9-3.8-.8-7-4-7-9V6l7-3z"/>
           </svg>
         `
@@ -517,7 +541,7 @@
           url: "https://gerber111213.github.io/Scenario-builder/"
         },
         icon: `
-          <svg viewBox="0 0 24 24" fill="none" stroke="#b4bec9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#b8c2ce" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
           </svg>
@@ -545,6 +569,15 @@
         title: "Rescue decision maker",
         desc: "Mechanical advantage, vectors, and technical rescue decision support.",
         url: "https://gerber111213.github.io/Rope-Rescue-math/",
+        active: true
+      },
+      {
+        id: "drone-school",
+        col: "rescue",
+        cat: "RPAS & AERIAL OPS",
+        title: "Drone School",
+        desc: "Drone operations training, flight rules, and mission reference.",
+        url: "https://gerber111213.github.io/Drone-school/",
         active: true
       },
 
@@ -611,16 +644,16 @@
     }
 
     function render() {
-      const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
+      const searchEl = document.getElementById("searchInput");
+      const q = (searchEl.value || "").trim().toLowerCase();
       const board = document.getElementById("columnsBoard");
+      const isFiltering = Boolean(q || currentMode !== "all");
 
-      const headerLinksCount = COLUMNS.filter((c) => c.headerLink && c.headerLink.url).length;
       const activeModulesCount = MODULES.filter((m) => m.active && m.url).length;
-      const activeTotal = activeModulesCount + headerLinksCount;
-      const totalItems = MODULES.length + headerLinksCount;
+      const totalModules = MODULES.length;
 
       document.getElementById("countPill").innerHTML =
-        `Active: <strong>${activeTotal}</strong> / ${totalItems}`;
+        `Active: <strong>${activeModulesCount}</strong> / ${totalModules}`;
 
       const items = MODULES.filter((m) => {
         const isReady = Boolean(m.active && m.url);
@@ -646,6 +679,10 @@
             `${col.headerLink.title} ${col.headerLink.label} ${col.headerLink.cat} ${col.headerLink.desc}`
               .toLowerCase()
               .includes(q));
+
+        if (isFiltering && colModules.length === 0 && !showHeaderLink) {
+          return "";
+        }
 
         const headerLinkHtml = showHeaderLink
           ? `
@@ -703,10 +740,10 @@
                 `;
               })
               .join("")
-          : `<div class="empty-col">No matching tools</div>`;
+          : `<div class="empty-state">No tools in this column</div>`;
 
         return `
-          <section class="col-panel" aria-label="${col.title}">
+          <section class="col-panel" data-col="${col.id}" aria-label="${col.title}">
             <div class="col-header">
               <div class="col-header-main">
                 <div class="col-graphic">${col.icon}</div>
@@ -720,10 +757,21 @@
             ${cardsHtml}
           </section>
         `;
-      }).join("");
+      }).filter(Boolean).join("");
 
-      board.innerHTML = colsHtml;
+      board.innerHTML = colsHtml || `<div class="empty-state">No matching tools found.</div>`;
     }
+
+    document.addEventListener("keydown", (e) => {
+      const searchEl = document.getElementById("searchInput");
+      if (e.key === "/" && document.activeElement !== searchEl && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) {
+        e.preventDefault();
+        searchEl.focus();
+      } else if (e.key === "Escape" && document.activeElement === searchEl) {
+        searchEl.value = "";
+        render();
+      }
+    });
 
     render();
   </script>
